@@ -39,4 +39,8 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+mongoose.connect('mongodb://localhost/node-graphql', { promiseLibrary: require('bluebird'), useNewUrlParser: true })
+  .then(() =>  console.log('connection successful'))
+  .catch((err) => console.error(err));
+  
 module.exports = app;

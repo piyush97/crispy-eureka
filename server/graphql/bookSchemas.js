@@ -40,3 +40,38 @@ var bookType = new GraphQLObjectType({
       }
     }
   });
+
+  var queryType = new GraphQLObjectType({
+    name: 'Query',
+    fields: function () {
+      return {
+        books: {
+          type: new GraphQLList(bookType),
+          resolve: function () {
+            const books = BookModel.find().exec()
+            if (!books) {
+              throw new Error('Error')
+            }
+            return books
+          }
+        },
+        book: {
+          type: bookType,
+          args: {
+            id: {
+              name: '_id',
+              type: GraphQLString
+            }
+          },
+          resolve: function (root, params) {
+            const bookDetails = BookModel.findById(params.id).exec()
+            if (!bookDetails) {
+              throw new Error('Error')
+            }
+            return bookDetails
+          }
+        }
+      }
+    }
+  });
+  module.exports = new GraphQLSchema({query: queryType});
